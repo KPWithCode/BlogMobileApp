@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { Text, Card, Button, Icon } from 'react-native-elements';
+import { NavigationInjectedProps, withNavigation } from 'react-navigation'
 
 
-
-interface Props {
+interface Props extends NavigationInjectedProps {
     blog: {
         id: number,
         title: string,
@@ -17,7 +17,7 @@ interface Props {
 
 interface State { }
 
-export default class BlogPreviewCard extends React.Component<Props, State> {
+class BlogPreviewCard extends React.Component<Props, State> {
 
 
 
@@ -32,8 +32,11 @@ export default class BlogPreviewCard extends React.Component<Props, State> {
                 <Button
                     icon={<Icon name='code' color='#ffffff' />}
                     buttonStyle={{ backgroundColor: '#AE3CD7', borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0 }}
-                    title='VIEW NOW' />
+                    title='Read This Blog'
+                    onPress={() => this.props.navigation.navigate('SingleBlog')}
+                />
             </Card>
         )
     }
 }
+export default withNavigation(BlogPreviewCard)

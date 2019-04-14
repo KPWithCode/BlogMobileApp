@@ -8,7 +8,7 @@ import BlogPreviewCard from '../components/BlogPreviewCard';
 
 
 
-interface Props extends NavigationScreenProps { }
+interface Props { }
 interface State {
     blogs: {
         id: number,
