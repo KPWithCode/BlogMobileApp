@@ -6,9 +6,8 @@ import BlogPreviewCard from '../components/BlogPreviewCard';
 
 
 
-
-
 interface Props { }
+
 interface State {
     blogs: {
         id: number,
@@ -54,8 +53,7 @@ export default class AllBlogs extends React.Component<Props, State> {
                     {this.renderBlogs()}
 
                 </ScrollView>
-                {/* <Text style={styles.welcome}>AllBlogs ScreenText</Text>
-                <Button title="Go To Single Blog" onPress={() => this.props.navigation.navigate("SingleBlog")} /> */}
+
             </View>
         );
     }
