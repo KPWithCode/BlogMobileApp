@@ -4,6 +4,7 @@ import { Badge, Text } from 'react-native-elements'
 import { NavigationScreenOptions, NavigationParams } from 'react-navigation';
 import { json } from '../utils/api';
 import moment from 'moment';
+
 interface Props extends NavigationParams { }
 interface State {
     singleBlog: {
@@ -61,7 +62,7 @@ export default class SingleBlog extends React.Component<Props, State> {
         return (
             <View style={styles.container}>
                 <Text h3 style={styles.titleStyle}>{title}</Text>
-                <Text style={styles.dateStyle}> on {moment(_created).format('MMM DD,YYYY')}></Text>
+                <Text style={styles.dateStyle}> on {moment(_created).format('MMM DD,YYYY')}</Text>
                 <View>{this.renderTags()}</View>
                 <Text>{body}</Text>
             </View>
