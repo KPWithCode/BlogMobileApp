@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, View, Alert } from 'react-native';
 import { Text, Button, Input } from 'react-native-elements';
-import { NavigationScreenOptions, NavigationParams } from 'react-navigation';
-import { json } from '../utils/api'
+import { NavigationScreenOptions, NavigationScreenProps, createSwitchNavigator } from 'react-navigation';
+import { json, SetAccessToken, getUser } from '../utils/api'
 
 
-interface Props { }
+interface Props extends NavigationScreenProps { }
 interface State {
     email: string;
     password: string;
@@ -25,13 +25,31 @@ export default class Login extends React.Component<Props, State> {
         };
     }
 
+    async componentDidMount() {
+        let user = await getUser();
+        if (user && user.role === 'admin') {
+            this.props.navigation.navigate('AllBlogs')
+        }
+    }
+
     async handleLogin() {
         try {
             let result = await json('https://cherry-pie-19862.herokuapp.com//auth/login', 'POST', {
-                email: 'KyledaNovice@hooblah.com',
-                password: 'Blogapp'
+                email: this.state.email,
+                password: this.state.password
             })
             console.log(result)
+            if (result) {
+                await SetAccessToken(result.token, { userid: result.userid, role: result.role });
+                let user = await getUser();
+                console.log(user)
+                if (user && user.role === 'admin') {
+                    this.props.navigation.navigate('AllBlogs')
+                } else {
+                    Alert.alert('Invalid Credentials')
+                }
+            }
+
         } catch (e) {
             console.log(e)
             Alert.alert('Problem Logging In. Contact Admin!!')
@@ -40,16 +58,21 @@ export default class Login extends React.Component<Props, State> {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}>
                     <Input value={this.state.email}
-                    leftIcon={{type: 'font-awesome',name: 'envelope'}}
+                        textContentType='emailAddress'
+                        containerStyle={{ marginVertical: 5 }}
+                        leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                         placeholder="Email"
                         onChangeText={(text) => this.setState({ email: text })}
                     />
 
                     <Input value={this.state.password}
+                        secureTextEntry={true}
+                        textContentType='password'
+                        containerStyle={{ marginVertical: 5 }}
                         placeholder="Password"
-                        leftIcon={{type: 'font-awesome',name: 'key'}}
+                        leftIcon={{ type: 'font-awesome', name: 'key' }}
                         onChangeText={(text) => this.setState({ password: text })} />
                 </View>
 
@@ -60,7 +83,7 @@ export default class Login extends React.Component<Props, State> {
                         containerStyle={{ margin: 10 }}
                         buttonStyle={{ backgroundColor: '#AE3CD7' }}
                         // onPress={() => this.handleLogin()} 
-                        onPress={() => console.log('Test!')}
+                        onPress={() => this.handleLogin()}
                     />
                 </View>
             </View>
